@@ -9,9 +9,9 @@ import torch
 from tqdm import tqdm
 from transformers import AutoTokenizer, LogitsProcessorList, PreTrainedTokenizer
 
-from src.config import MetaConfig, ModelConfig
-from src.models.utils import LogitInfo
-from src.utils import print
+from watermark_stealing.config import MetaConfig, ModelConfig
+from watermark_stealing.models.utils import LogitInfo
+from watermark_stealing.utils import print
 
 
 class OpenAIModel:

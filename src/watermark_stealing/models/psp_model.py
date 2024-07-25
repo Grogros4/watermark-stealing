@@ -2,8 +2,8 @@ import functools
 import os
 from typing import Any
 
-from src.models.psp.embed_sentences import embed_all, similarity
-from src.models.psp.models import load_model
+from watermark_stealing.models.psp.embed_sentences import embed_all, similarity
+from watermark_stealing.models.psp.models import load_model
 
 
 class PspModel:

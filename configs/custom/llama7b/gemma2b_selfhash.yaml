@@ -20,7 +20,7 @@ server:
 attacker:
   algo: 'our'
   model:
-    cfg_path: 'configs/model/mistral7b.yaml'
+    cfg_path: 'configs/model/gemma2b.yaml'
     skip: false
     use_sampling: true
   querying:
@@ -35,8 +35,8 @@ attacker:
     mode: "fast"
     nb_queries: 30000
   generation:
-    sysprompt: null
-    spoofer_strength: 7.5
+    sysprompt: 'standard'
+    spoofer_strength: 10
     w_abcd: 2.0
     w_partials: 1.0
     w_empty: 0.5
@@ -53,7 +53,7 @@ attacker:
     prevent_eos_if_zest_bad: true
     use_graceful_conclusion: true 
 evaluator:
-  skip: true
+  skip: false
   batch_size: 4
   eval_class: "spoofing"
   metrics:
@@ -61,7 +61,7 @@ evaluator:
   eval_mode:
     - "dolly-writing-100-long"
 gradio:
-  skip: false 
+  skip: true 
   make_public: false 
   port: 7860
   default_prompt: "Write a long essay about war."

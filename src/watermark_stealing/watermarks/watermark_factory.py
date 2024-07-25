@@ -2,9 +2,9 @@ from typing import Optional
 
 from transformers import PreTrainedTokenizer
 
-from src.config import MetaConfig, WatermarkConfig, WatermarkScheme
-from src.watermarks.base_watermark import BaseWatermark
-from src.watermarks.kgw_watermark import KgwWatermark
+from watermark_stealing.config import MetaConfig, WatermarkConfig, WatermarkScheme
+from watermark_stealing.watermarks.base_watermark import BaseWatermark
+from watermark_stealing.watermarks.kgw_watermark import KgwWatermark
 
 
 def get_watermark(

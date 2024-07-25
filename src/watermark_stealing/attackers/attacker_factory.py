@@ -1,7 +1,7 @@
-from src.attackers.base_attacker import BaseAttacker
-from src.attackers.our_attacker import OurAttacker
-from src.attackers.sadasivan_attacker import SadasivanAttacker
-from src.config import AttackerAlgo, WsConfig
+from watermark_stealing.attackers.base_attacker import BaseAttacker
+from watermark_stealing.attackers.our_attacker import OurAttacker
+from watermark_stealing.attackers.sadasivan_attacker import SadasivanAttacker
+from watermark_stealing.config import AttackerAlgo, WsConfig
 
 
 def get_attacker(cfg: WsConfig) -> BaseAttacker:

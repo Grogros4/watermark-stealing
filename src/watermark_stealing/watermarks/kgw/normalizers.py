@@ -16,7 +16,7 @@ import unicodedata
 from collections import defaultdict
 from functools import cache
 
-import src.watermarks.kgw.homoglyphs as hg
+import watermark_stealing.watermarks.kgw.homoglyphs as hg
 
 
 def normalization_strategy_lookup(strategy_name: str) -> object:

@@ -12,12 +12,12 @@ from datasets import load_dataset
 from neptune import Run
 
 from data.generation_prompts import prompt_dict
-from src.attackers import BaseAttacker, OurAttacker
-from src.config import EvalClass, EvalMetric, EvalMode, EvaluatorConfig
-from src.models import PspModel
-from src.server import Server
-from src.utils import ProgressLogger, create_open, get_gpt4_grades, print
-from src.watermarks import KgwWatermark
+from watermark_stealing.attackers import BaseAttacker, OurAttacker
+from watermark_stealing.config import EvalClass, EvalMetric, EvalMode, EvaluatorConfig
+from watermark_stealing.models import PspModel
+from watermark_stealing.server import Server
+from watermark_stealing.utils import ProgressLogger, create_open, get_gpt4_grades, print
+from watermark_stealing.watermarks import KgwWatermark
 
 
 @dataclass

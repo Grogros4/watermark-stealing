@@ -4,9 +4,9 @@ import numpy as np
 import torch
 from transformers import LogitsProcessor, LogitsProcessorList
 
-from src.config import MetaConfig, ServerConfig
-from src.models import HfModel
-from src.watermarks import BaseWatermark, get_watermark
+from watermark_stealing.config import MetaConfig, ServerConfig
+from watermark_stealing.models import HfModel
+from watermark_stealing.watermarks import BaseWatermark, get_watermark
 
 
 class ForceLongProcessor(LogitsProcessor):
@@ -47,7 +47,7 @@ class Server:
             self.watermarks.append(watermark)
 
     def generate(
-        self, prompts: List[str], disable_watermark: bool = False, return_model_inputs: bool = False
+        self, prompts: List[str], disable_watermark: bool = False, return_model_inputs: bool = False, return_logit_info: bool = False
     ) -> Any:
         if disable_watermark:
             return self.model.generate(
@@ -60,6 +60,7 @@ class Server:
                 prompts,
                 LogitsProcessorList([watermark.spawn_logits_processor()]),
                 return_model_inputs=return_model_inputs,
+                return_logit_info=return_logit_info
             )
 
     def detect(self, completions: List[str]) -> List[dict]:

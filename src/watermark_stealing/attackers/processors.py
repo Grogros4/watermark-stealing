@@ -10,8 +10,8 @@ from transformers import (
     TemperatureLogitsWarper,
 )
 
-from src.attackers.count_store import CountStore
-from src.config import AttackerGenerationConfig, ModelConfig
+from watermark_stealing.attackers.count_store import CountStore
+from watermark_stealing.config import AttackerGenerationConfig, ModelConfig
 
 
 class SpoofedProcessor(LogitsProcessor):

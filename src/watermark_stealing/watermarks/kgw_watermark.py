@@ -3,10 +3,10 @@ from typing import Any, List, Optional
 import torch
 from transformers import PreTrainedTokenizer
 
-from src.config import MetaConfig, WatermarkConfig
-from src.models import fix_isolated_punctuation
-from src.watermarks.base_watermark import BaseWatermark
-from src.watermarks.kgw import (  # type: ignore
+from watermark_stealing.config import MetaConfig, WatermarkConfig
+from watermark_stealing.models import fix_isolated_punctuation
+from watermark_stealing.watermarks.base_watermark import BaseWatermark
+from watermark_stealing.watermarks.kgw import (  # type: ignore
     HardWatermarkLogitsProcessor,
     WatermarkDetector,
     WatermarkLogitsProcessor,
@@ -32,6 +32,14 @@ class KgwWatermark(BaseWatermark):
     def get_prevctx_width(seeding_scheme: str) -> int:
         if seeding_scheme == "selfhash":
             return 3
+        elif seeding_scheme == "simple_0":
+            return 0
+        elif seeding_scheme == "simple_1":
+            return 1
+        elif seeding_scheme == "simple_2":
+            return 2
+        elif seeding_scheme == "key_42":
+            return 1
         elif seeding_scheme == "lefthash":
             return 1
         elif seeding_scheme == "gptwm":

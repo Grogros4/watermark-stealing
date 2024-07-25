@@ -9,14 +9,14 @@ from datasets import load_dataset
 from nltk.tokenize import sent_tokenize as ntlk_sent_tokenize
 from transformers import LogitsProcessorList
 
-from src.attackers.base_attacker import BaseAttacker
-from src.attackers.count_store import CountStore
-from src.attackers.processors import (
+from watermark_stealing.attackers.base_attacker import BaseAttacker
+from watermark_stealing.attackers.count_store import CountStore
+from watermark_stealing.attackers.processors import (
     CustomNgramRepetitionPenaltyProcessor,
     GracefulConclusionProcessor,
     SpoofedProcessor,
 )
-from src.config import (
+from watermark_stealing.config import (
     AttackerConfig,
     AttackerGenerationConfig,
     AttackerLearningMode,
@@ -24,10 +24,10 @@ from src.config import (
     SyspromptType,
     WatermarkScheme,
 )
-from src.models import HfModel, OpenAIModel, fix_isolated_punctuation
-from src.server import Server
-from src.utils import create_open, get_gpt4_safeprompts, print
-from src.watermarks import KgwWatermark
+from watermark_stealing.models import HfModel, OpenAIModel, fix_isolated_punctuation
+from watermark_stealing.server import Server
+from watermark_stealing.utils import create_open, get_gpt4_safeprompts, print
+from watermark_stealing.watermarks import KgwWatermark
 
 
 class OurAttacker(BaseAttacker):
@@ -385,6 +385,7 @@ class OurAttacker(BaseAttacker):
         prompts: List[str],
         cfg_gen: Optional[AttackerGenerationConfig] = None,
         reseed: bool = True,
+        return_logit_info: bool = False
     ) -> List[str]:
         processors = self.get_processor_list(cfg_gen)
 
@@ -462,13 +463,17 @@ class OurAttacker(BaseAttacker):
                         output_text += " " + outputs[0]
                 completions.append(output_text)
         else:
-            completions, _ = self.model.generate(prompts, processors, reseed=reseed)  # ignore cost
-
+            out = self.model.generate(prompts, processors, reseed=reseed, return_logit_info=return_logit_info)  # ignore cost
+            completions = out[0]
+            
         # if there are z estimates get them
         self.z_estimates: List[List[float]] = [[]]
         for processor in processors:
             if isinstance(processor, SpoofedProcessor):
                 self.z_estimates = list(processor.z_estimates)
+                
+        if return_logit_info:
+            return out
 
         return completions
 

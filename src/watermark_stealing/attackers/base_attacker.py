@@ -1,7 +1,7 @@
 from typing import Any, List, Optional
 
-from src.config import AttackerConfig, AttackerGenerationConfig, MetaConfig
-from src.server import Server
+from watermark_stealing.config import AttackerConfig, AttackerGenerationConfig, MetaConfig
+from watermark_stealing.server import Server
 
 
 class BaseAttacker:

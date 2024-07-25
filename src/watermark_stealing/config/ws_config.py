@@ -3,7 +3,7 @@ from typing import Any, List, Optional, Union
 
 from pydantic import Field, validator
 
-from src.config.utils import PydanticBaseModelWithOptionalDefaultsPath as PBMwODP
+from watermark_stealing.config.utils import PydanticBaseModelWithOptionalDefaultsPath as PBMwODP
 
 """
     Pre-detection normalizers from watermarks/kgw/normalizers.py
@@ -116,6 +116,7 @@ class ModelConfig(PBMwODP, arbitrary_types_allowed=True):  # type: ignore
     use_flashattn2: bool = Field(False, description="Use flash attention")
     prompt_max_len: int = Field(None, description="Max length of the prompt")
     response_max_len: int = Field(None, description="Max length of the response")
+    response_min_len: int = Field(1, description="Min length of the response")
     n_beams: int = Field(1, description="Number of beams for beam search")
     use_sampling: bool = Field(False, description="Use multinomial sampling instead of greedy")
     sampling_temp: float = Field(0.7, description="Temperature for multinomial sampling")

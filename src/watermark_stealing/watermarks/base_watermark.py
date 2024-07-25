@@ -2,7 +2,7 @@ from typing import List
 
 from transformers import LogitsProcessor
 
-from src.config import MetaConfig, WatermarkConfig
+from watermark_stealing.config import MetaConfig, WatermarkConfig
 
 
 class BaseWatermark:

@@ -15,8 +15,8 @@ from transformers import (
     TemperatureLogitsWarper,
 )
 
-from src.config import MetaConfig, ModelConfig
-from src.models.utils import (
+from watermark_stealing.config import MetaConfig, ModelConfig
+from watermark_stealing.models.utils import (
     LogitInfo,
     QueryCost,
     TokenCandidate,
@@ -24,7 +24,7 @@ from src.models.utils import (
     is_decoder_only_model,
     is_seq2seq_model,
 )
-from src.utils import ProgressLogger, print
+from watermark_stealing.utils import ProgressLogger, print
 
 
 class HfModel:
@@ -142,6 +142,7 @@ class HfModel:
         logit_processors: LogitsProcessorList,
         reseed: bool = True,
         return_model_inputs: bool = False,
+        return_logit_info: bool = False,
     ) -> Any:
         if self.model is None:
             raise RuntimeError("Call _load_model before using the model")
@@ -156,16 +157,23 @@ class HfModel:
 
         ProgressLogger.start("Calling model.generate")
         print(batchenc["input_ids"].shape)
-        completions = self.model.generate(
+        out = self.model.generate(
             **batchenc,
             max_new_tokens=self.cfg.response_max_len,
+            min_new_tokens=self.cfg.response_min_len,
             pad_token_id=self.tokenizer.eos_token_id,
             num_beams=self.cfg.n_beams,
             do_sample=self.cfg.use_sampling,
             temperature=self.cfg.sampling_temp,
             logits_processor=logit_processors,
+            output_logits = return_logit_info,
+            return_dict_in_generate=return_logit_info
         )
         ProgressLogger.stop()
+        if return_logit_info:
+            completions = out.sequences
+        else:
+            completions = out
 
         if is_decoder_only_model(self.cfg.name):
             completions = completions[:, batchenc["input_ids"].shape[-1] :]
@@ -187,6 +195,8 @@ class HfModel:
         cost = QueryCost(batchenc["input_ids"].numel(), completions.numel())
         if return_model_inputs:
             return completions_str, cost, actual_inputs
+        if return_logit_info:
+            return completions_str, cost, actual_inputs, out
         return completions_str, cost
 
     def _get_actual_input_str(self, inputs: List[str], batchenc: BatchEncoding) -> List[str]:

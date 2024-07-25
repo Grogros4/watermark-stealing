@@ -7,14 +7,14 @@ import numpy as np
 import torch
 
 import gradio as gr
-from src.attackers import BaseAttacker, OurAttacker
-from src.config import SyspromptType, WsConfig
-from src.evaluator import Evaluator, QualityMetricValues
-from src.models import LogitInfo, fix_isolated_punctuation
-from src.server import Server
-from src.utils import ProgressLogger
-from src.watermarks import KgwWatermark
-from src.watermarks.kgw import hashint  # type: ignore
+from watermark_stealing.attackers import BaseAttacker, OurAttacker
+from watermark_stealing.config import SyspromptType, WsConfig
+from watermark_stealing.evaluator import Evaluator, QualityMetricValues
+from watermark_stealing.models import LogitInfo, fix_isolated_punctuation
+from watermark_stealing.server import Server
+from watermark_stealing.utils import ProgressLogger
+from watermark_stealing.watermarks import KgwWatermark
+from watermark_stealing.watermarks.kgw import hashint  # type: ignore
 
 """
     Experimental debug UI, no guarantees

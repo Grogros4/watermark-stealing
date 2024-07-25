@@ -75,6 +75,21 @@ def seeding_scheme_lookup(seeding_scheme: str):
         context_width = 0
         self_salt = False
         hash_key = 0
+    elif seeding_scheme == "key_42":
+        prf_type = "additive_prf"
+        context_width = 1
+        self_salt = False
+        hash_key = 42
+    elif seeding_scheme == "simple_0":
+        prf_type = "constant_prf"
+        context_width = 1
+        self_salt = False
+        hash_key = 15485863
+    elif seeding_scheme == "simple_2":
+        prf_type = "additive_prf"
+        context_width = 2
+        self_salt = False
+        hash_key = 15485863
     elif seeding_scheme.startswith("ff") or seeding_scheme.startswith(
         "hard-"
     ):  # freeform seeding scheme API - only use for experimenting

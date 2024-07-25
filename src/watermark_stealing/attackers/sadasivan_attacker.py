@@ -3,10 +3,10 @@ from typing import List, Optional
 
 import numpy as np
 
-from src.attackers.base_attacker import BaseAttacker
-from src.config import AttackerConfig, AttackerGenerationConfig, MetaConfig
-from src.models import HfModel
-from src.server import Server
+from watermark_stealing.attackers.base_attacker import BaseAttacker
+from watermark_stealing.config import AttackerConfig, AttackerGenerationConfig, MetaConfig
+from watermark_stealing.models import HfModel
+from watermark_stealing.server import Server
 
 # From: https://github.com/vinusankars/Reliability-of-AI-text-detectors
 # KGW LeftHash h=1; eval on untargeted incoherent text (+ 1 human example); completion models

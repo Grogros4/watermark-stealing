@@ -4,7 +4,7 @@ from typing import Any, Dict, List, Tuple
 import yaml
 from pydantic import ValidationError
 
-from src.config import WsConfig
+from watermark_stealing.config import WsConfig
 
 
 def index_dict(d: Dict[str, Any], key: Tuple[str, ...]) -> Any:

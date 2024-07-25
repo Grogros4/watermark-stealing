@@ -35,7 +35,7 @@ attacker:
     mode: "fast"
     nb_queries: 30000
   generation:
-    sysprompt: null
+    sysprompt: 'standard'
     spoofer_strength: 7.5
     w_abcd: 2.0
     w_partials: 1.0
