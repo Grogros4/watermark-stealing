@@ -67,6 +67,7 @@ class KgwWatermark(BaseWatermark):
                 delta=self.cfg.generation.delta,
                 seeding_scheme=self.cfg.generation.seeding_scheme,
                 device=self.device,
+                rng_device=self.rng_device,
                 tokenizer=self.tokenizer,  # needed just for debug
             )
 
@@ -75,7 +76,7 @@ class KgwWatermark(BaseWatermark):
             vocab=self.vocab,
             seeding_scheme=self.cfg.generation.seeding_scheme,
             gamma=self.cfg.generation.gamma,
-            device=self.device,
+            device=self.rng_device,
             tokenizer=self.tokenizer,
             normalizers=self.cfg.detection.normalizers,
             z_threshold=self.cfg.detection.z_threshold,

@@ -75,7 +75,8 @@ class HfModel:
             raise ValueError(f"Unknown model name: {self.cfg.name}")
 
         if self.device == "cuda":
-            self.model.to("cuda")
+            pass
+            #self.model.to("cuda")
         self.model.eval()
 
     def _chatify(self, prompt: str, completion: Optional[str] = None) -> str:

@@ -93,6 +93,7 @@ class SyspromptType(Enum):
 
 class MetaConfig(PBMwODP, extra="forbid"):  # type: ignore
     device: str = Field(..., description="Device to run on (cuda/cpu)")
+    rng_device: str = Field("cuda", description="Device to use for RNG (cuda/cpu)")
     use_neptune: bool = Field(False, description="If neptune should be used")
     neptune_project: str = Field(
         "ORG/PROJ", description="Neptune project name; replace with your project if using neptune"

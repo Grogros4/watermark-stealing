@@ -68,6 +68,10 @@ class WatermarkBase:
     def _seed_rng(self, input_ids: torch.LongTensor) -> None:
         """Seed RNG from local context. Not batched, because the generators we use (like cuda.random) are not batched."""
         # Need to have enough context for seed generation
+        
+        input_ids_device = input_ids.device
+        input_ids = input_ids.to(self.rng.device)
+        
         if input_ids.shape[-1] < self.context_width:
             raise ValueError(
                 f"seeding_scheme requires at least a {self.context_width} token prefix to seed the"
@@ -79,9 +83,14 @@ class WatermarkBase:
         )
         # enable for long, interesting streams of pseudorandom numbers: print(prf_key)
         self.rng.manual_seed(prf_key % (2**64 - 1))  # safeguard against overflow from long
+        
+        input_ids = input_ids.to(input_ids_device)
 
     def _get_greenlist_ids(self, input_ids: torch.LongTensor) -> torch.LongTensor:
         """Seed rng based on local context width and use this information to generate ids on the green list."""
+        input_ids_device = input_ids.device
+        input_ids = input_ids.to(self.rng.device)
+        
         self._seed_rng(input_ids)
 
         greenlist_size = int(self.vocab_size * self.gamma)
@@ -94,6 +103,9 @@ class WatermarkBase:
             greenlist_ids = vocab_permutation[
                 (self.vocab_size - greenlist_size) :
             ]  # legacy behavior
+            
+        input_ids = input_ids.to(input_ids_device)
+        greenlist_ids = greenlist_ids.to(input_ids_device)    
 
         return greenlist_ids
 
@@ -109,6 +121,7 @@ class WatermarkLogitsProcessor(WatermarkBase, LogitsProcessor):
         store_spike_ents: bool = False,
         device: torch.device = None,
         tokenizer: AutoTokenizer = None,
+        rng_device: torch.device = None,
         **kwargs,
     ):
         super().__init__(*args, **kwargs)
@@ -119,7 +132,10 @@ class WatermarkLogitsProcessor(WatermarkBase, LogitsProcessor):
             self._init_spike_entropies()
 
         # NOTE used to be lazy initialized when inputs are given to co-locate but we will just assume it's all on the same device and put it here
-        self.rng = torch.Generator(device=device)
+        if rng_device is None:
+            self.rng = torch.Generator(device=device)
+        else:
+            self.rng = torch.Generator(device=rng_device)
         self.tokenizer = tokenizer
 
     def _init_spike_entropies(self):
@@ -212,6 +228,13 @@ class WatermarkLogitsProcessor(WatermarkBase, LogitsProcessor):
         # NOTE, it would be nice to get rid of this batch loop, but currently,
         # the seed and partition operations are not tensor/vectorized, thus
         # each sequence in the batch needs to be treated separately.
+        
+        # Move input_ids to the device of the RNG
+        scores_device = scores.device
+        input_ids_device = input_ids.device
+        input_ids = input_ids.to(self.rng.device)
+        scores = scores.to(self.rng.device)
+        
         list_of_greenlist_ids = [None for _ in input_ids]  # Greenlists could differ in length
         # probably for self_salt only because 25% you're in your own but maybe not?
         for b_idx, input_seq in enumerate(input_ids):
@@ -234,6 +257,9 @@ class WatermarkLogitsProcessor(WatermarkBase, LogitsProcessor):
         scores = self._bias_greenlist_logits(
             scores=scores, greenlist_mask=green_tokens_mask, greenlist_bias=self.delta
         )
+        
+        scores = scores.to(scores_device)
+        input_ids = input_ids.to(input_ids_device)
         
         return scores
 

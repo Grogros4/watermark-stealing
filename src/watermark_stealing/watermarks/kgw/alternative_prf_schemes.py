@@ -82,7 +82,7 @@ def seeding_scheme_lookup(seeding_scheme: str):
         hash_key = 42
     elif seeding_scheme == "simple_0":
         prf_type = "constant_prf"
-        context_width = 1
+        context_width = 0
         self_salt = False
         hash_key = 15485863
     elif seeding_scheme == "simple_2":
